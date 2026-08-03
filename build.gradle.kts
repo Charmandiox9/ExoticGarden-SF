@@ -21,7 +21,8 @@ dependencies {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType<JavaCompile> {
@@ -30,7 +31,10 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.processResources {
-    val props = mapOf("version" to project.version)
+    val props = mapOf(
+        "version" to project.version,
+        "project" to mapOf("version" to project.version)
+    )
     inputs.properties(props)
     filesMatching("plugin.yml") {
         expand(props)
