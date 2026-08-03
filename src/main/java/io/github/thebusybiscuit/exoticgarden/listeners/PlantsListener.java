@@ -45,7 +45,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
-import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
 public class PlantsListener implements Listener {
@@ -62,18 +61,15 @@ public class PlantsListener implements Listener {
 
     @EventHandler
     public void onGrow(StructureGrowEvent e) {
-        if (PaperLib.isPaper()) {
-            if (PaperLib.isChunkGenerated(e.getLocation())) {
-                growStructure(e);
-            }
-            else {
-                PaperLib.getChunkAtAsync(e.getLocation()).thenRun(() -> growStructure(e));
-            }
-        }
-        else {
-            if (!e.getLocation().getChunk().isLoaded()) {
-                e.getLocation().getChunk().load();
-            }
+        World world = e.getLocation().getWorld();
+        int chunkX = e.getLocation().getBlockX() >> 4;
+        int chunkZ = e.getLocation().getBlockZ() >> 4;
+
+        if (world != null && world.isChunkGenerated(chunkX, chunkZ)) {
+            growStructure(e);
+        } else if (world != null) {
+            world.getChunkAtAsync(chunkX, chunkZ).thenRun(() -> growStructure(e));
+        } else {
             growStructure(e);
         }
     }
@@ -106,16 +102,10 @@ public class PlantsListener implements Listener {
                 int z = chunkZ * 16 + random.nextInt(16);
 
                 if ((x < worldLimit && x > -worldLimit) && (z < worldLimit && z > -worldLimit)) {
-                    if (PaperLib.isPaper()) {
-                        if (PaperLib.isChunkGenerated(world, chunkX, chunkZ)) {
-                            growBush(e, x, z, berry, random, true);
-                        }
-                        else {
-                            PaperLib.getChunkAtAsync(world, chunkX, chunkZ).thenRun(() -> growBush(e, x, z, berry, random, true));
-                        }
-                    }
-                    else {
-                        growBush(e, x, z, berry, random, false);
+                    if (world.isChunkGenerated(chunkX, chunkZ)) {
+                        growBush(e, x, z, berry, random, true);
+                    } else {
+                        world.getChunkAtAsync(chunkX, chunkZ).thenRun(() -> growBush(e, x, z, berry, random, true));
                     }
                 }
             }
@@ -129,16 +119,10 @@ public class PlantsListener implements Listener {
                 int z = chunkZ * 16 + random.nextInt(16);
 
                 if ((x < worldLimit && x > -worldLimit) && (z < worldLimit && z > -worldLimit)) {
-                    if (PaperLib.isPaper()) {
-                        if (PaperLib.isChunkGenerated(world, chunkX, chunkZ)) {
-                            pasteTree(e, x, z, tree);
-                        }
-                        else {
-                            PaperLib.getChunkAtAsync(world, chunkX, chunkZ).thenRun(() -> pasteTree(e, x, z, tree));
-                        }
-                    }
-                    else {
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> pasteTree(e, x, z, tree));
+                    if (world.isChunkGenerated(chunkX, chunkZ)) {
+                        pasteTree(e, x, z, tree);
+                    } else {
+                        world.getChunkAtAsync(chunkX, chunkZ).thenRun(() -> pasteTree(e, x, z, tree));
                     }
                 }
             }

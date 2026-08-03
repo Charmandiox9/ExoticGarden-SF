@@ -26,7 +26,6 @@ import io.github.thebusybiscuit.slimefun4.core.multiblocks.MultiBlockMachine;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.exoticgarden.util.CustomItemStack;
 import io.github.thebusybiscuit.exoticgarden.util.ItemUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 
 public class Kitchen extends MultiBlockMachine {
@@ -98,13 +97,13 @@ public class Kitchen extends MultiBlockMachine {
     @Nonnull
     private static Furnace locateFurnace(@Nonnull Block b) {
         if (b.getRelative(BlockFace.EAST).getType() == Material.FURNACE) {
-            return (Furnace) PaperLib.getBlockState(b.getRelative(BlockFace.EAST), false).getState();
+            return (Furnace) b.getRelative(BlockFace.EAST).getState();
         } else if (b.getRelative(BlockFace.WEST).getType() == Material.FURNACE) {
-            return (Furnace) PaperLib.getBlockState(b.getRelative(BlockFace.WEST), false).getState();
+            return (Furnace) b.getRelative(BlockFace.WEST).getState();
         } else if (b.getRelative(BlockFace.NORTH).getType() == Material.FURNACE) {
-            return (Furnace) PaperLib.getBlockState(b.getRelative(BlockFace.NORTH), false).getState();
+            return (Furnace) b.getRelative(BlockFace.NORTH).getState();
         } else {
-            return (Furnace) PaperLib.getBlockState(b.getRelative(BlockFace.SOUTH), false).getState();
+            return (Furnace) b.getRelative(BlockFace.SOUTH).getState();
         }
     }
 }

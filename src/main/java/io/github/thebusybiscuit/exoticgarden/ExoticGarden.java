@@ -27,7 +27,6 @@ import io.github.thebusybiscuit.exoticgarden.util.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
-import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
 import org.bstats.bukkit.Metrics;
@@ -84,8 +83,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onEnable() {
-        PaperLib.suggestPaper(this);
-
         if (!schematicsFolder.exists()) {
             schematicsFolder.mkdirs();
         }
