@@ -25,6 +25,16 @@ public class CustomItemStack extends ItemStack {
         setAmount(amount);
     }
 
+    public CustomItemStack(@Nonnull io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack item, int amount) {
+        super(item.item());
+        setAmount(amount);
+    }
+
+    public CustomItemStack(@Nonnull io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack item, @Nullable String name, @Nullable String... lore) {
+        super(item.item());
+        applyMeta(name, lore);
+    }
+
     public CustomItemStack(@Nonnull Material type, @Nullable String name, @Nullable String... lore) {
         super(type);
         applyMeta(name, lore);

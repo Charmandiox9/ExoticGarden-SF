@@ -120,7 +120,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         // @formatter:off
         SlimefunItemStack iceCube = new SlimefunItemStack("ICE_CUBE", "9340bef2c2c33d113bac4e6a1a84d5ffcecbbfab6b32fa7a7f76195442bd1a2", "&bIce Cube");
-        new SlimefunItem(miscItemGroup, iceCube, RecipeType.GRIND_STONE, new ItemStack[] {new ItemStack(Material.ICE), null, null, null, null, null, null, null, null}, new SlimefunItemStack(iceCube, 4))
+        new SlimefunItem(miscItemGroup, iceCube, RecipeType.GRIND_STONE, new ItemStack[] {new ItemStack(Material.ICE), null, null, null, null, null, null, null, null}, iceCube.asQuantity(4))
         .register(this);
 
         registerBerry("Grape", ChatColor.RED, Color.RED, PlantType.BUSH, "6ee97649bd999955413fcbf0b269c91be4342b10d0755bad7a17e95fcefdab0");
@@ -172,23 +172,23 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         registerMagicalPlant("Iron", new ItemStack(Material.IRON_INGOT), "db97bdf92b61926e39f5cddf12f8f7132929dee541771e0b592c8b82c9ad52d",
         new ItemStack[] {null, new ItemStack(Material.IRON_BLOCK), null, new ItemStack(Material.IRON_BLOCK), getItem("COAL_PLANT"), new ItemStack(Material.IRON_BLOCK), null, new ItemStack(Material.IRON_BLOCK), null});
 
-        registerMagicalPlant("Gold", SlimefunItems.GOLD_4K, "e4df892293a9236f73f48f9efe979fe07dbd91f7b5d239e4acfd394f6eca",
-        new ItemStack[] {null, SlimefunItems.GOLD_16K, null, SlimefunItems.GOLD_16K, getItem("IRON_PLANT"), SlimefunItems.GOLD_16K, null, SlimefunItems.GOLD_16K, null});
+        registerMagicalPlant("Gold", SlimefunItems.GOLD_4K.item(), "e4df892293a9236f73f48f9efe979fe07dbd91f7b5d239e4acfd394f6eca",
+        new ItemStack[] {null, SlimefunItems.GOLD_16K.item(), null, SlimefunItems.GOLD_16K.item(), getItem("IRON_PLANT"), SlimefunItems.GOLD_16K.item(), null, SlimefunItems.GOLD_16K.item(), null});
 
         registerMagicalPlant("Copper", new CustomItemStack(SlimefunItems.COPPER_DUST, 8), "d4fc72f3d5ee66279a45ac9c63ac98969306227c3f4862e9c7c2a4583c097b8a",
-        new ItemStack[] {null, SlimefunItems.COPPER_DUST, null, SlimefunItems.COPPER_DUST, getItem("GOLD_PLANT"), SlimefunItems.COPPER_DUST, null, SlimefunItems.COPPER_DUST, null});
+        new ItemStack[] {null, SlimefunItems.COPPER_DUST.item(), null, SlimefunItems.COPPER_DUST.item(), getItem("GOLD_PLANT"), SlimefunItems.COPPER_DUST.item(), null, SlimefunItems.COPPER_DUST.item(), null});
 
         registerMagicalPlant("Aluminum", new CustomItemStack(SlimefunItems.ALUMINUM_DUST, 8), "f4455341eaff3cf8fe6e46bdfed8f501b461fb6f6d2fe536be7d2bd90d2088aa",
-        new ItemStack[] {null, SlimefunItems.ALUMINUM_DUST, null, SlimefunItems.ALUMINUM_DUST, getItem("IRON_PLANT"), SlimefunItems.ALUMINUM_DUST, null, SlimefunItems.ALUMINUM_DUST, null});
+        new ItemStack[] {null, SlimefunItems.ALUMINUM_DUST.item(), null, SlimefunItems.ALUMINUM_DUST.item(), getItem("IRON_PLANT"), SlimefunItems.ALUMINUM_DUST.item(), null, SlimefunItems.ALUMINUM_DUST.item(), null});
 
         registerMagicalPlant("Tin", new CustomItemStack(SlimefunItems.TIN_DUST, 8), "6efb43ba2fe6959180ee7307f3f054715a34c0a07079ab73712547ffd753dedd",
-        new ItemStack[] {null, SlimefunItems.TIN_DUST, null, SlimefunItems.TIN_DUST, getItem("IRON_PLANT"), SlimefunItems.TIN_DUST, null, SlimefunItems.TIN_DUST, null});
+        new ItemStack[] {null, SlimefunItems.TIN_DUST.item(), null, SlimefunItems.TIN_DUST.item(), getItem("IRON_PLANT"), SlimefunItems.TIN_DUST.item(), null, SlimefunItems.TIN_DUST.item(), null});
 
         registerMagicalPlant("Silver", new CustomItemStack(SlimefunItems.SILVER_DUST, 8), "1dd968b1851aa7160d1cd9db7516a8e1bf7b7405e5245c5338aa895fe585f26c",
-        new ItemStack[] {null, SlimefunItems.SILVER_DUST, null, SlimefunItems.SILVER_DUST, getItem("IRON_PLANT"), SlimefunItems.SILVER_DUST, null, SlimefunItems.SILVER_DUST, null});
+        new ItemStack[] {null, SlimefunItems.SILVER_DUST.item(), null, SlimefunItems.SILVER_DUST.item(), getItem("IRON_PLANT"), SlimefunItems.SILVER_DUST.item(), null, SlimefunItems.SILVER_DUST.item(), null});
 
         registerMagicalPlant("Lead", new CustomItemStack(SlimefunItems.LEAD_DUST, 8), "93c3c418039c4b28b0da75a6d9b22712c7015432d4f4226d6cc0a77d54b64178",
-        new ItemStack[] {null, SlimefunItems.LEAD_DUST, null, SlimefunItems.LEAD_DUST, getItem("IRON_PLANT"), SlimefunItems.LEAD_DUST, null, SlimefunItems.LEAD_DUST, null});
+        new ItemStack[] {null, SlimefunItems.LEAD_DUST.item(), null, SlimefunItems.LEAD_DUST.item(), getItem("IRON_PLANT"), SlimefunItems.LEAD_DUST.item(), null, SlimefunItems.LEAD_DUST.item(), null});
 
         registerMagicalPlant("Redstone", new ItemStack(Material.REDSTONE, 8), "e8deee5866ab199eda1bdd7707bdb9edd693444f1e3bd336bd2c767151cf2",
         new ItemStack[] {null, new ItemStack(Material.REDSTONE_BLOCK), null, new ItemStack(Material.REDSTONE_BLOCK), getItem("GOLD_PLANT"), new ItemStack(Material.REDSTONE_BLOCK), null, new ItemStack(Material.REDSTONE_BLOCK), null});
@@ -239,7 +239,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
             items.put(sapling.name(), new ItemStack(sapling));
         }
 
-        items.put("GRASS_SEEDS", grassSeeds);
+        items.put("GRASS_SEEDS", grassSeeds.item());
 
         Iterator<String> iterator = items.keySet().iterator();
         while (iterator.hasNext()) {
@@ -270,7 +270,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         SlimefunItemStack sapling = new SlimefunItemStack(id + "_SAPLING", Material.OAK_SAPLING, color + name + " Sapling");
 
-        items.put(id + "_SAPLING", sapling);
+        items.put(id + "_SAPLING", sapling.item());
 
         new BonemealableItem(mainItemGroup, sapling, ExoticGardenRecipeTypes.BREAKING_GRASS, new ItemStack[] { null, null, null, null, new ItemStack(Material.SHORT_GRASS), null, null, null, null }).register(this);
 
@@ -281,7 +281,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         }
 
         if (pie) {
-            new CustomFood(foodItemGroup, new SlimefunItemStack(id + "_PIE", "3418c6b0a29fc1fe791c89774d828ff63d2a9fa6c83373ef3aa47bf3eb79", color + name + " Pie", "", "&7&oRestores &b&o" + "6.5" + " &7&oHunger"), new ItemStack[] { getItem(id), new ItemStack(Material.EGG), new ItemStack(Material.SUGAR), new ItemStack(Material.MILK_BUCKET), SlimefunItems.WHEAT_FLOUR, null, null, null, null }, 13).register(this);
+            new CustomFood(foodItemGroup, new SlimefunItemStack(id + "_PIE", "3418c6b0a29fc1fe791c89774d828ff63d2a9fa6c83373ef3aa47bf3eb79", color + name + " Pie", "", "&7&oRestores &b&o" + "6.5" + " &7&oHunger"), new ItemStack[] { getItem(id), new ItemStack(Material.EGG), new ItemStack(Material.SUGAR), new ItemStack(Material.MILK_BUCKET), SlimefunItems.WHEAT_FLOUR.item(), null, null, null, null }, 13).register(this);
         }
 
         if (!new File(schematicsFolder, id + "_TREE.schematic").exists()) {
@@ -311,7 +311,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         SlimefunItemStack sfi = new SlimefunItemStack(upperCase + "_BUSH", Material.OAK_SAPLING, color + name + " Bush");
 
-        items.put(upperCase + "_BUSH", sfi);
+        items.put(upperCase + "_BUSH", sfi.item());
 
         new BonemealableItem(mainItemGroup, sfi, ExoticGardenRecipeTypes.BREAKING_GRASS, new ItemStack[] { null, null, null, null, new ItemStack(Material.SHORT_GRASS), null, null, null, null }).register(this);
 
@@ -323,7 +323,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         new CustomFood(foodItemGroup, new SlimefunItemStack(upperCase + "_JELLY_SANDWICH", "8c8a939093ab1cde6677faf7481f311e5f17f63d58825f0e0c174631fb0439", color + name + " Jelly Sandwich", "", "&7&oRestores &b&o" + "8.0" + " &7&oHunger"), new ItemStack[] { null, new ItemStack(Material.BREAD), null, null, getItem(upperCase + "_JUICE"), null, null, new ItemStack(Material.BREAD), null }, 16).register(this);
 
-        new CustomFood(foodItemGroup, new SlimefunItemStack(upperCase + "_PIE", "3418c6b0a29fc1fe791c89774d828ff63d2a9fa6c83373ef3aa47bf3eb79", color + name + " Pie", "", "&7&oRestores &b&o" + "6.5" + " &7&oHunger"), new ItemStack[] { getItem(upperCase), new ItemStack(Material.EGG), new ItemStack(Material.SUGAR), new ItemStack(Material.MILK_BUCKET), SlimefunItems.WHEAT_FLOUR, null, null, null, null }, 13).register(this);
+        new CustomFood(foodItemGroup, new SlimefunItemStack(upperCase + "_PIE", "3418c6b0a29fc1fe791c89774d828ff63d2a9fa6c83373ef3aa47bf3eb79", color + name + " Pie", "", "&7&oRestores &b&o" + "6.5" + " &7&oHunger"), new ItemStack[] { getItem(upperCase), new ItemStack(Material.EGG), new ItemStack(Material.SUGAR), new ItemStack(Material.MILK_BUCKET), SlimefunItems.WHEAT_FLOUR.item(), null, null, null, null }, 13).register(this);
     }
 
     @Nullable
@@ -340,7 +340,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         berries.add(berry);
 
         SlimefunItemStack bush = new SlimefunItemStack(enumStyle + "_BUSH", Material.OAK_SAPLING, color + name + " Plant");
-        items.put(upperCase + "_BUSH", bush);
+        items.put(upperCase + "_BUSH", bush.item());
 
         new BonemealableItem(mainItemGroup, bush, ExoticGardenRecipeTypes.BREAKING_GRASS, new ItemStack[] { null, null, null, null, new ItemStack(Material.SHORT_GRASS), null, null, null, null })
             .register(this);
@@ -354,7 +354,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         SlimefunItemStack essence = new SlimefunItemStack(enumStyle + "_ESSENCE", Material.BLAZE_POWDER, "&rMagical Essence", "", "&7" + name);
 
-        Berry berry = new Berry(essence, upperCase + "_ESSENCE", PlantType.ORE_PLANT, texture);
+        Berry berry = new Berry(essence.item(), upperCase + "_ESSENCE", PlantType.ORE_PLANT, texture);
         berries.add(berry);
 
         new BonemealableItem(magicalItemGroup, new SlimefunItemStack(enumStyle + "_PLANT", Material.OAK_SAPLING, "&r" + name + " Plant"), RecipeType.ENHANCED_CRAFTING_TABLE, recipe)

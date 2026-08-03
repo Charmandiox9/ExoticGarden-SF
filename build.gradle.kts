@@ -16,7 +16,10 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("com.github.Slimefun:Slimefun4:RC-37")
+    compileOnly("com.github.Slimefun:Slimefun4:RC-37") {
+        exclude(group = "io.github.baked-libs", module = "dough-api")
+    }
+    compileOnly(fileTree("run/plugins") { include("*.jar") })
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     implementation("org.bstats:bstats-bukkit:3.1.0")
 }

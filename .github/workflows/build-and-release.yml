@@ -17,35 +17,46 @@ permissions:
 
 jobs:
   build:
-    name: Build & Package
+    name: Build & Release
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'maven'
 
-      - name: Build with Maven
-        run: mvn clean package --file pom.xml -B
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: Upload Artifact
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ExoticGarden-Jar
-          path: target/ExoticGarden*.jar
+          path: build/libs/ExoticGarden*.jar
 
-      - name: Determine Release Tag and Title
+      - name: Prepare Release Assets & Tags
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         id: release_info
         run: |
+          mkdir -p release_assets
+          JAR_FILE=$(ls build/libs/ExoticGarden*.jar | grep -v 'plain' | head -n 1)
+          
           VERSION="1.21.0"
           NAME="ExoticGarden"
+          
           if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             TAG="${GITHUB_REF#refs/tags/}"
             TITLE="${NAME} ${TAG}"
@@ -53,14 +64,12 @@ jobs:
             TAG="v${VERSION}-b${{ github.run_number }}"
             TITLE="${NAME} v${VERSION} (Build #${{ github.run_number }})"
           fi
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
-          echo "title=${TITLE}" >> $GITHUB_OUTPUT
-
-          # Prepare clean-named jar for release asset
-          mkdir -p release_assets
-          JAR_FILE=$(ls target/ExoticGarden*.jar | grep -v 'original-' | head -n 1)
+          
           cp "$JAR_FILE" "release_assets/${NAME}-${TAG}.jar"
           cp "$JAR_FILE" "release_assets/${NAME}.jar"
+          
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "title=${TITLE}" >> $GITHUB_OUTPUT
 
       - name: Publish GitHub Release
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
