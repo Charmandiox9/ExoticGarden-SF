@@ -14,24 +14,24 @@ This version has been completely refactored and modernized for **Minecraft / Pap
 
 ## 🌟 Features
 
-* 🌾 **Custom Crops & Bushes:** Harvest berries, vegetables, and exotic plants that integrate seamlessly into the Slimefun guide.
-* 🌳 **Custom Fruit Trees:** Grow apples, oranges, pears, peaches, and more using custom in-game schematic generators.
-* 🍳 **The Kitchen Machine:** Cook elaborate custom dishes, jelly sandwiches, and fruit pies.
-* 🍹 **Juices & Smoothies:** Blend refreshing drinks that restore hunger and apply dynamic saturation effects.
-* ✨ **Magical Plants:** Cultivate magical essences to produce rare resources.
-* 🛡️ **Modern Slimefun4 RC-37+ Compatibility:** Fully patched for Dough/Slimefun `SlimefunItemStack` decoupling, eliminating all runtime bytecode verification errors (`VerifyError`).
-* 🛠️ **Modern 1.21.X Support:** Native support for `SHORT_GRASS`, modern particle systems, Paper Brigadier commands, and asynchronous world operations.
-* ⚡ **Integrated Test Server:** Includes PaperMC's `run-paper` Gradle environment to test changes in an isolated server with 1 command.
+- 🌾 **Custom Crops & Bushes:** Harvest berries, vegetables, and exotic plants that integrate seamlessly into the Slimefun guide.
+- 🌳 **Custom Fruit Trees:** Grow apples, oranges, pears, peaches, and more using custom in-game schematic generators.
+- 🍳 **The Kitchen Machine:** Cook elaborate custom dishes, jelly sandwiches, and fruit pies.
+- 🍹 **Juices & Smoothies:** Blend refreshing drinks that restore hunger and apply dynamic saturation effects.
+- ✨ **Magical Plants:** Cultivate magical essences to produce rare resources.
+- 🛡️ **Modern Slimefun4 RC-37+ Compatibility:** Fully patched for Dough/Slimefun `SlimefunItemStack` decoupling, eliminating all runtime bytecode verification errors (`VerifyError`).
+- 🛠️ **Modern 1.21.X Support:** Native support for `SHORT_GRASS`, modern particle systems, Paper Brigadier commands, and asynchronous world operations.
+- ⚡ **Integrated Test Server:** Includes PaperMC's `run-paper` Gradle environment to test changes in an isolated server with 1 command.
 
 ---
 
 ## 📋 Requirements
 
-| Requirement | Supported Version |
-| :--- | :--- |
+| Requirement         | Supported Version                                                                             |
+| :------------------ | :-------------------------------------------------------------------------------------------- |
 | **Server Software** | [Paper](https://papermc.io/), [Purpur](https://purpurmc.org/) (1.21, 1.21.1, 1.21.3, 1.21.4+) |
-| **Java Runtime** | Java 21 (LTS) or higher |
-| **Core Dependency** | [Slimefun 4](https://github.com/Slimefun/Slimefun4) (RC-37 or newer) |
+| **Java Runtime**    | Java 21 (LTS) or higher                                                                       |
+| **Core Dependency** | [Slimefun 4](https://github.com/Slimefun/Slimefun4) (RC-37 or newer)                          |
 
 ---
 
@@ -55,6 +55,7 @@ This version has been completely refactored and modernized for **Minecraft / Pap
 chmod +x gradlew
 ./gradlew build
 ```
+
 The resulting shaded JAR file will be in `build/libs/ExoticGarden-1.21.0-SNAPSHOT.jar`.
 
 ### 🎮 Running the Local Test Server
@@ -71,16 +72,8 @@ You can launch a self-contained Paper 1.21.4 test server with Slimefun and Exoti
 
 ---
 
-## 🤖 CI / CD & Automated Releases
-
-This repository includes a GitHub Actions workflow ([`build-and-release.yml`](.github/workflows/build-and-release.yml)):
-* **Automated Builds:** Compiles and validates every pull request and push using Gradle and JDK 21.
-* **Semantic Auto-Releases:** Pushes to `main`/`master` or version tags (`v*`) automatically trigger a GitHub Release with clean versioned JARs (`ExoticGarden-v1.21.0-b<num>.jar`) and generated changelogs.
-
----
-
 ## 📜 License & Credits
 
-* **Original Author:** [TheBusyBiscuit](https://github.com/TheBusyBiscuit)
-* **1.21.X Modernization & Compatibility Maintenance:** [Charmandiox9](https://github.com/Charmandiox9)
-* **License:** Licensed under the [GNU General Public License v3.0](LICENSE).
+- **Original Author:** [TheBusyBiscuit](https://github.com/TheBusyBiscuit)
+- **1.21.X Modernization & Compatibility Maintenance:** [Charmandiox9](https://github.com/Charmandiox9)
+- **License:** Licensed under the [GNU General Public License v3.0](LICENSE).
