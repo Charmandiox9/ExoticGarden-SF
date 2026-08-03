@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     id("com.gradleup.shadow") version "8.3.6"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 group = "io.github.thebusybiscuit"
@@ -49,3 +50,8 @@ tasks.shadowJar {
 tasks.build {
     dependsOn(tasks.shadowJar)
 }
+
+tasks.runServer {
+    minecraftVersion("1.21.4")
+}
+
