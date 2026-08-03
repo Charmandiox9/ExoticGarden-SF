@@ -1,4 +1,4 @@
-name: Java CI & Release
+name: Build & Release
 
 on:
   push:
@@ -40,11 +40,37 @@ jobs:
           name: ExoticGarden-Jar
           path: target/ExoticGarden*.jar
 
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Determine Release Tag and Title
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+        id: release_info
+        run: |
+          VERSION="1.21.0"
+          NAME="ExoticGarden"
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            TITLE="${NAME} ${TAG}"
+          else
+            TAG="v${VERSION}-b${{ github.run_number }}"
+            TITLE="${NAME} v${VERSION} (Build #${{ github.run_number }})"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "title=${TITLE}" >> $GITHUB_OUTPUT
+
+          # Prepare clean-named jar for release asset
+          mkdir -p release_assets
+          JAR_FILE=$(ls target/ExoticGarden*.jar | grep -v 'original-' | head -n 1)
+          cp "$JAR_FILE" "release_assets/${NAME}-${TAG}.jar"
+          cp "$JAR_FILE" "release_assets/${NAME}.jar"
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         uses: softprops/action-gh-release@v2
         with:
-          files: target/ExoticGarden*.jar
+          tag_name: ${{ steps.release_info.outputs.tag }}
+          name: ${{ steps.release_info.outputs.title }}
+          files: release_assets/*.jar
           generate_release_notes: true
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
