@@ -15,8 +15,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.exoticgarden.util.ItemUtil;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
 
 public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
 
@@ -57,7 +57,7 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
 
             if (edible && e.getPlayer().getFoodLevel() < 20) {
                 restoreHunger(e.getPlayer());
-                ItemUtils.consumeItem(e.getItem(), false);
+                ItemUtil.consumeItem(e.getItem(), false);
             }
         };
     }

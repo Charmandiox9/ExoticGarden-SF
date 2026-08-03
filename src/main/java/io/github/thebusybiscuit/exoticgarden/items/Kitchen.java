@@ -24,8 +24,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.multiblocks.MultiBlockMachine;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
+import io.github.thebusybiscuit.exoticgarden.util.CustomItemStack;
+import io.github.thebusybiscuit.exoticgarden.util.ItemUtil;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 
@@ -72,7 +72,7 @@ public class Kitchen extends MultiBlockMachine {
                     ItemStack item = inv.getItem(i);
 
                     if (item != null) {
-                        ItemUtils.consumeItem(item, item.getType() == Material.MILK_BUCKET);
+                        ItemUtil.consumeItem(item, item.getType() == Material.MILK_BUCKET);
                     }
                 }
 
