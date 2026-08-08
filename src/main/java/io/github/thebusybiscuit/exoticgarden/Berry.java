@@ -14,18 +14,25 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 public class Berry {
 
     private final ItemStack item;
+    private final ItemStack headItem;
     private final String id;
     private final String texture;
     private final PlantType type;
 
     @ParametersAreNonnullByDefault
     public Berry(String id, PlantType type, String texture) {
-        this(null, id, type, texture);
+        this(null, null, id, type, texture);
     }
 
     @ParametersAreNonnullByDefault
     public Berry(@Nullable ItemStack item, String id, PlantType type, String texture) {
+        this(item, null, id, type, texture);
+    }
+
+    @ParametersAreNonnullByDefault
+    public Berry(@Nullable ItemStack item, @Nullable ItemStack headItem, String id, PlantType type, String texture) {
         this.item = item;
+        this.headItem = headItem;
         this.id = id;
         this.texture = texture;
         this.type = type;
@@ -44,6 +51,10 @@ public class Berry {
 
     public ItemStack getItem() {
         return type == PlantType.ORE_PLANT ? item : SlimefunItem.getById(id).getItem();
+    }
+
+    public ItemStack getHeadItem() {
+        return headItem != null ? headItem : getItem();
     }
 
     public String getTexture() {
