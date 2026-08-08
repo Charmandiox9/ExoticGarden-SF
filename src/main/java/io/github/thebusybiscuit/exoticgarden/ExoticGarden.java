@@ -8,6 +8,9 @@ import io.github.thebusybiscuit.exoticgarden.items.FoodRegistry;
 import io.github.thebusybiscuit.exoticgarden.items.GrassSeeds;
 import io.github.thebusybiscuit.exoticgarden.items.Kitchen;
 import io.github.thebusybiscuit.exoticgarden.items.MagicalEssence;
+import io.github.thebusybiscuit.exoticgarden.machines.MagicalEssenceCondenser;
+import io.github.thebusybiscuit.exoticgarden.machines.MagicalGrower;
+import io.github.thebusybiscuit.exoticgarden.machines.MagicalHarvester;
 import io.github.thebusybiscuit.exoticgarden.listeners.AndroidListener;
 import io.github.thebusybiscuit.exoticgarden.listeners.PlantsListener;
 import io.github.thebusybiscuit.slimefun4.api.MinecraftVersion;
@@ -79,6 +82,15 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
     private ItemGroup foodItemGroup;
     private ItemGroup drinksItemGroup;
     private ItemGroup magicalItemGroup;
+    private ItemGroup magicalItemGroupT2;
+    private ItemGroup magicalItemGroupT3;
+    private ItemGroup magicalItemGroupT4;
+    private ItemGroup machineryItemGroup;
+    private final List<MagicalEssence> magicalEssences = new ArrayList<>();
+    private final List<SlimefunItem> magicalTier1Items = new ArrayList<>();
+    private final List<SlimefunItem> magicalTier2Items = new ArrayList<>();
+    private final List<SlimefunItem> magicalTier3Items = new ArrayList<>();
+    private final List<SlimefunItem> magicalTier4Items = new ArrayList<>();
     private Kitchen kitchen;
 
     @Override
@@ -110,7 +122,11 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         miscItemGroup = new SubItemGroup(new NamespacedKey(this, "misc"), nestedItemGroup, new CustomItemStack(PlayerHead.getItemStack(PlayerSkin.fromHashCode("606be2df2122344bda479feece365ee0e9d5da276afa0e8ce8d848f373dd131")), "&aExotic Garden - Ingredients and Tools"));
         foodItemGroup = new SubItemGroup(new NamespacedKey(this, "food"), nestedItemGroup, new CustomItemStack(PlayerHead.getItemStack(PlayerSkin.fromHashCode("a14216d10714082bbe3f412423e6b19232352f4d64f9aca3913cb46318d3ed")), "&aExotic Garden - Food"));
         drinksItemGroup = new SubItemGroup(new NamespacedKey(this, "drinks"), nestedItemGroup, new CustomItemStack(PlayerHead.getItemStack(PlayerSkin.fromHashCode("2a8f1f70e85825607d28edce1a2ad4506e732b4a5345a5ea6e807c4b313e88")), "&aExotic Garden - Drinks"));
-        magicalItemGroup = new SubItemGroup(new NamespacedKey(this, "magical_crops"), nestedItemGroup, new CustomItemStack(Material.BLAZE_POWDER, "&5Exotic Garden - Magical Plants"));
+        magicalItemGroup = new SubItemGroup(new NamespacedKey(this, "magical_crops"), nestedItemGroup, new CustomItemStack(Material.BLAZE_POWDER, "&5Exotic Garden - Magical Plants &7(Tier I)"));
+        magicalItemGroupT2 = new SubItemGroup(new NamespacedKey(this, "magical_crops_t2"), nestedItemGroup, new CustomItemStack(Material.BLAZE_POWDER, "&eExotic Garden - Magical Plants &6(Tier II)"));
+        magicalItemGroupT3 = new SubItemGroup(new NamespacedKey(this, "magical_crops_t3"), nestedItemGroup, new CustomItemStack(Material.BLAZE_POWDER, "&dExotic Garden - Magical Plants &5(Tier III)"));
+        magicalItemGroupT4 = new SubItemGroup(new NamespacedKey(this, "magical_crops_t4"), nestedItemGroup, new CustomItemStack(Material.BLAZE_POWDER, "&6&lExotic Garden - Magical Plants &c(Tier IV)"));
+        machineryItemGroup = new SubItemGroup(new NamespacedKey(this, "machinery"), nestedItemGroup, new CustomItemStack(Material.RESPAWN_ANCHOR, "&6Exotic Garden - Maquinaria Mágica"));
 
         kitchen = new Kitchen(this, miscItemGroup);
         kitchen.register(this);
@@ -222,6 +238,78 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         registerMagicalPlant("Slime", new ItemStack(Material.SLIME_BALL, 8), "90e65e6e5113a5187dad46dfad3d3bf85e8ef807f82aac228a59c4a95d6f6a",
         new ItemStack[] {null, new ItemStack(Material.SLIME_BALL), null, new ItemStack(Material.SLIME_BALL), getItem("ENDER_PLANT"), new ItemStack(Material.SLIME_BALL), null, new ItemStack(Material.SLIME_BALL), null});
 
+        // --- Slimefun Dusts & Resources ---
+        registerMagicalPlant("Silicon", new CustomItemStack(SlimefunItems.SILICON, 4), "961730bbdd8b394154b9d0315a6396e95aa025a1da329ceba4b2ea62d5f8b9d",
+        new ItemStack[] {null, SlimefunItems.SILICON.item(), null, SlimefunItems.SILICON.item(), getItem("QUARTZ_PLANT"), SlimefunItems.SILICON.item(), null, SlimefunItems.SILICON.item(), null});
+
+        registerMagicalPlant("Zinc", new CustomItemStack(SlimefunItems.ZINC_DUST, 8), "57bc1e0cfa5cbf5d9cefead3f312cfb53e8f8107ef4ce69527ec318dc3ec219",
+        new ItemStack[] {null, SlimefunItems.ZINC_DUST.item(), null, SlimefunItems.ZINC_DUST.item(), getItem("ALUMINUM_PLANT"), SlimefunItems.ZINC_DUST.item(), null, SlimefunItems.ZINC_DUST.item(), null});
+
+        registerMagicalPlant("Magnesium", new CustomItemStack(SlimefunItems.MAGNESIUM_DUST, 8), "96a60e1d88a101f3089d71ce09eb47eb108d98c25dc5fa5ca2d91bbba1a1c97",
+        new ItemStack[] {null, SlimefunItems.MAGNESIUM_DUST.item(), null, SlimefunItems.MAGNESIUM_DUST.item(), getItem("ALUMINUM_PLANT"), SlimefunItems.MAGNESIUM_DUST.item(), null, SlimefunItems.MAGNESIUM_DUST.item(), null});
+
+        registerMagicalPlant("Sulfate", new CustomItemStack(SlimefunItems.SULFATE, 8), "275e7a9ca9d95bf69c279eb34a9cb525049b491a67a998bb5596dbcf69e9f9",
+        new ItemStack[] {null, SlimefunItems.SULFATE.item(), null, SlimefunItems.SULFATE.item(), getItem("COAL_PLANT"), SlimefunItems.SULFATE.item(), null, SlimefunItems.SULFATE.item(), null});
+
+        registerMagicalPlant("Uranium", SlimefunItems.URANIUM.item(), "2916d80d2dae72f9eb281177651086c8f6ea49ec96cba7b2c93faea5dbebe6",
+        new ItemStack[] {null, SlimefunItems.SMALL_URANIUM.item(), null, SlimefunItems.SMALL_URANIUM.item(), getItem("LEAD_PLANT"), SlimefunItems.SMALL_URANIUM.item(), null, SlimefunItems.SMALL_URANIUM.item(), null});
+
+        // --- Slimefun Alloys & Metals ---
+        registerMagicalPlant("Steel", new CustomItemStack(SlimefunItems.STEEL_INGOT, 2), "6df926ae79d63c5d6e241773cf764d9b6bf7cbfd2cb598df7164cb831f24d4",
+        new ItemStack[] {null, SlimefunItems.STEEL_INGOT.item(), null, SlimefunItems.STEEL_INGOT.item(), getItem("IRON_PLANT"), SlimefunItems.STEEL_INGOT.item(), null, SlimefunItems.STEEL_INGOT.item(), null});
+
+        registerMagicalPlant("Duralumin", new CustomItemStack(SlimefunItems.DURALUMIN_INGOT, 2), "224e7514a601bb971f11a43aeb18d6e949df24cf8f203fb8c8bcf6ecbb09b6",
+        new ItemStack[] {null, SlimefunItems.DURALUMIN_INGOT.item(), null, SlimefunItems.DURALUMIN_INGOT.item(), getItem("ALUMINUM_PLANT"), SlimefunItems.DURALUMIN_INGOT.item(), null, SlimefunItems.DURALUMIN_INGOT.item(), null});
+
+        registerMagicalPlant("Bronze", new CustomItemStack(SlimefunItems.BRONZE_INGOT, 2), "9557b77f9859f81bbdfdb3a3036987f2ff8ea99fbaf08c5c7cb52beee04c7df",
+        new ItemStack[] {null, SlimefunItems.BRONZE_INGOT.item(), null, SlimefunItems.BRONZE_INGOT.item(), getItem("COPPER_PLANT"), SlimefunItems.BRONZE_INGOT.item(), null, SlimefunItems.BRONZE_INGOT.item(), null});
+
+        registerMagicalPlant("Brass", new CustomItemStack(SlimefunItems.BRASS_INGOT, 2), "df562aa1cebdf57b4fbc681a95b8cae295da9be6c5c742a2491a27e77a28e3b",
+        new ItemStack[] {null, SlimefunItems.BRASS_INGOT.item(), null, SlimefunItems.BRASS_INGOT.item(), getItem("ZINC_PLANT"), SlimefunItems.BRASS_INGOT.item(), null, SlimefunItems.BRASS_INGOT.item(), null});
+
+        registerMagicalPlant("Corinthian Bronze", new CustomItemStack(SlimefunItems.CORINTHIAN_BRONZE_INGOT, 2), "983196924ffda00c37731fc61219b1613eb281d11ff31405e3f5ce8c8e146eb",
+        new ItemStack[] {null, SlimefunItems.CORINTHIAN_BRONZE_INGOT.item(), null, SlimefunItems.CORINTHIAN_BRONZE_INGOT.item(), getItem("BRONZE_PLANT"), SlimefunItems.CORINTHIAN_BRONZE_INGOT.item(), null, SlimefunItems.CORINTHIAN_BRONZE_INGOT.item(), null});
+
+        registerMagicalPlant("Solder", new CustomItemStack(SlimefunItems.SOLDER_INGOT, 2), "53cfa9cbb92955fba71f31f99c9527ec318dc3ec2196e06b9b3e150fb5789f2",
+        new ItemStack[] {null, SlimefunItems.SOLDER_INGOT.item(), null, SlimefunItems.SOLDER_INGOT.item(), getItem("LEAD_PLANT"), SlimefunItems.SOLDER_INGOT.item(), null, SlimefunItems.SOLDER_INGOT.item(), null});
+
+        registerMagicalPlant("Billon", new CustomItemStack(SlimefunItems.BILLON_INGOT, 2), "6e2bb75cf1b4df0410ad5428a506161474e64ec5d787042079be8c9f5ae4f36",
+        new ItemStack[] {null, SlimefunItems.BILLON_INGOT.item(), null, SlimefunItems.BILLON_INGOT.item(), getItem("SILVER_PLANT"), SlimefunItems.BILLON_INGOT.item(), null, SlimefunItems.BILLON_INGOT.item(), null});
+
+        registerMagicalPlant("Damascus Steel", new CustomItemStack(SlimefunItems.DAMASCUS_STEEL_INGOT, 2), "6b5398d89e5f524e86a07cf5957b4a2bf1cb6f20436894c7b8d8bb3298bfd38",
+        new ItemStack[] {null, SlimefunItems.DAMASCUS_STEEL_INGOT.item(), null, SlimefunItems.DAMASCUS_STEEL_INGOT.item(), getItem("STEEL_PLANT"), SlimefunItems.DAMASCUS_STEEL_INGOT.item(), null, SlimefunItems.DAMASCUS_STEEL_INGOT.item(), null});
+
+        registerMagicalPlant("Hardened Metal", new CustomItemStack(SlimefunItems.HARDENED_METAL_INGOT, 2), "b8cb3fb9a3ff1bca1e9cb10f92b7c6c40a5b82092193b2a26c483f2dc593e83",
+        new ItemStack[] {null, SlimefunItems.HARDENED_METAL_INGOT.item(), null, SlimefunItems.HARDENED_METAL_INGOT.item(), getItem("DAMASCUS_STEEL_PLANT"), SlimefunItems.HARDENED_METAL_INGOT.item(), null, SlimefunItems.HARDENED_METAL_INGOT.item(), null});
+
+        registerMagicalPlant("Reinforced Alloy", SlimefunItems.REINFORCED_ALLOY_INGOT.item(), "efea1e0b57e7428fbb771d9d8c838ee33a34a8c9e5e78ec3d750c8227b9c9f8",
+        new ItemStack[] {null, SlimefunItems.REINFORCED_ALLOY_INGOT.item(), null, SlimefunItems.REINFORCED_ALLOY_INGOT.item(), getItem("HARDENED_METAL_PLANT"), SlimefunItems.REINFORCED_ALLOY_INGOT.item(), null, SlimefunItems.REINFORCED_ALLOY_INGOT.item(), null});
+
+        registerMagicalPlant("Gold 24K", SlimefunItems.GOLD_24K.item(), "e4df892293a9236f73f48f9efe979fe07dbd91f7b5d239e4acfd394f6eca",
+        new ItemStack[] {null, SlimefunItems.GOLD_24K.item(), null, SlimefunItems.GOLD_24K.item(), getItem("GOLD_PLANT"), SlimefunItems.GOLD_24K.item(), null, SlimefunItems.GOLD_24K.item(), null});
+
+        // --- Slimefun Tech & Advanced Materials ---
+        registerMagicalPlant("Redstone Alloy", new CustomItemStack(SlimefunItems.REDSTONE_ALLOY, 2), "e8deee5866ab199eda1bdd7707bdb9edd693444f1e3bd336bd2c767151cf2",
+        new ItemStack[] {null, SlimefunItems.REDSTONE_ALLOY.item(), null, SlimefunItems.REDSTONE_ALLOY.item(), getItem("REDSTONE_PLANT"), SlimefunItems.REDSTONE_ALLOY.item(), null, SlimefunItems.REDSTONE_ALLOY.item(), null});
+
+        registerMagicalPlant("Ferrosilicon", new CustomItemStack(SlimefunItems.FERROSILICON, 2), "38947605dbf2c8dcf9427b587a8b34002d2508731333e8b4bb6eb17cf1f96cb",
+        new ItemStack[] {null, SlimefunItems.FERROSILICON.item(), null, SlimefunItems.FERROSILICON.item(), getItem("SILICON_PLANT"), SlimefunItems.FERROSILICON.item(), null, SlimefunItems.FERROSILICON.item(), null});
+
+        registerMagicalPlant("Electro Magnet", SlimefunItems.ELECTRO_MAGNET.item(), "8bb3805b4bfe49ef851ec651b72a912bb0e4a1adad3b8a1c9df0aa3f4e1f7c8",
+        new ItemStack[] {null, SlimefunItems.ELECTRO_MAGNET.item(), null, SlimefunItems.ELECTRO_MAGNET.item(), getItem("REDSTONE_ALLOY_PLANT"), SlimefunItems.ELECTRO_MAGNET.item(), null, SlimefunItems.ELECTRO_MAGNET.item(), null});
+
+        registerMagicalPlant("Carbonado", SlimefunItems.CARBONADO.item(), "471abdfb6a715f5c357d6054bb84218eb98877bc94129bb46599bdfbb943d0",
+        new ItemStack[] {null, SlimefunItems.CARBONADO.item(), null, SlimefunItems.CARBONADO.item(), getItem("DIAMOND_PLANT"), SlimefunItems.CARBONADO.item(), null, SlimefunItems.CARBONADO.item(), null});
+
+        registerMagicalPlant("Synthetic Diamond", SlimefunItems.SYNTHETIC_DIAMOND.item(), "f88cd6dd50359c7d5898c7c7e3e260bfcd3dcb1493a89b9e88e9cbecbfe45949",
+        new ItemStack[] {null, SlimefunItems.SYNTHETIC_DIAMOND.item(), null, SlimefunItems.SYNTHETIC_DIAMOND.item(), getItem("CARBONADO_PLANT"), SlimefunItems.SYNTHETIC_DIAMOND.item(), null, SlimefunItems.SYNTHETIC_DIAMOND.item(), null});
+
+        registerMagicalPlant("Nether Ice", new CustomItemStack(SlimefunItems.NETHER_ICE, 2), "7538a75e347895bcddb04ff156942ad7199c43d7890731215bda74f1b0a9df4",
+        new ItemStack[] {null, SlimefunItems.NETHER_ICE.item(), null, SlimefunItems.NETHER_ICE.item(), getItem("OBSIDIAN_PLANT"), SlimefunItems.NETHER_ICE.item(), null, SlimefunItems.NETHER_ICE.item(), null});
+
+        registerMagicalPlant("Blistering Ingot", SlimefunItems.BLISTERING_INGOT_3.item(), "da7d8c07e997f7bc86fb0f5451a8bc8a9b20b22a818c2caecbeaf3a2e3ffb",
+        new ItemStack[] {null, SlimefunItems.BLISTERING_INGOT_3.item(), null, SlimefunItems.BLISTERING_INGOT_3.item(), getItem("NETHERITE_PLANT"), SlimefunItems.BLISTERING_INGOT_3.item(), null, SlimefunItems.BLISTERING_INGOT_3.item(), null});
+
         new Crook(miscItemGroup, new SlimefunItemStack("CROOK", Material.WOODEN_HOE, "&rCrook", "", "&7+ &b25% &7Sapling Drop Rate"), RecipeType.ENHANCED_CRAFTING_TABLE,
         new ItemStack[] {new ItemStack(Material.STICK), new ItemStack(Material.STICK), null, null, new ItemStack(Material.STICK), null, null, new ItemStack(Material.STICK), null})
         .register(this);
@@ -229,6 +317,113 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         SlimefunItemStack grassSeeds = new SlimefunItemStack("GRASS_SEEDS", Material.PUMPKIN_SEEDS, "&rGrass Seeds", "", "&7&oCan be planted on Dirt");
         new GrassSeeds(mainItemGroup, grassSeeds, ExoticGardenRecipeTypes.BREAKING_GRASS, new ItemStack[] {null, null, null, null, new ItemStack(Material.SHORT_GRASS), null, null, null, null})
         .register(this);
+
+        // --- Magical Machinery ---
+        // Harvester Tier 1
+        SlimefunItemStack harvesterT1 = new SlimefunItemStack("MAGICAL_AUTO_HARVESTER", Material.DISPENSER,
+            "&bCosechador Mágico Automático &7(Tier I)", "",
+            "&7Cosecha automáticamente plantas mágicas",
+            "&7en un área de &e5x5 &7sin romper los brotes.",
+            "",
+            "&e\u26A1 &7Consumo: &b24 J/s",
+            "&e\u26A1 &7Capacidad: &b128 J");
+        ItemStack[] harvesterT1Recipe = new ItemStack[] {
+            SlimefunItems.ELECTRIC_MOTOR.item(), SlimefunItems.MAGNESIUM_INGOT.item(), SlimefunItems.ELECTRIC_MOTOR.item(),
+            SlimefunItems.REINFORCED_ALLOY_INGOT.item(), new ItemStack(Material.DISPENSER), SlimefunItems.REINFORCED_ALLOY_INGOT.item(),
+            SlimefunItems.ELECTRIC_MOTOR.item(), SlimefunItems.MEDIUM_CAPACITOR.item(), SlimefunItems.ELECTRIC_MOTOR.item()
+        };
+        MagicalHarvester harvesterObjT1 = new MagicalHarvester(machineryItemGroup, harvesterT1, RecipeType.ENHANCED_CRAFTING_TABLE, harvesterT1Recipe, MagicalHarvester.Tier.ONE);
+        harvesterObjT1.register(this);
+
+        // Harvester Tier 2
+        SlimefunItemStack harvesterT2 = new SlimefunItemStack("MAGICAL_AUTO_HARVESTER_2", Material.DISPENSER,
+            "&6Cosechador Mágico Automático &e(Tier II)", "",
+            "&7Cosecha automáticamente plantas mágicas",
+            "&7en un área ampliada de &e9x9 &7sin romper los brotes.",
+            "",
+            "&e\u26A1 &7Consumo: &b48 J/s",
+            "&e\u26A1 &7Capacidad: &b256 J");
+        ItemStack[] harvesterT2Recipe = new ItemStack[] {
+            SlimefunItems.ELECTRO_MAGNET.item(), SlimefunItems.BLISTERING_INGOT_3.item(), SlimefunItems.ELECTRO_MAGNET.item(),
+            SlimefunItems.CARBONADO.item(), harvesterT1.item(), SlimefunItems.CARBONADO.item(),
+            SlimefunItems.ELECTRO_MAGNET.item(), SlimefunItems.BIG_CAPACITOR.item(), SlimefunItems.ELECTRO_MAGNET.item()
+        };
+        MagicalHarvester harvesterObjT2 = new MagicalHarvester(machineryItemGroup, harvesterT2, RecipeType.ENHANCED_CRAFTING_TABLE, harvesterT2Recipe, MagicalHarvester.Tier.TWO);
+        harvesterObjT2.register(this);
+
+        // Grower Tier 1
+        SlimefunItemStack growerT1 = new SlimefunItemStack("MAGICAL_AUTO_GROWER", Material.DROPPER,
+            "&bFertilizador Mágico Automático &7(Tier I)", "",
+            "&7Acelera y hace crecer brotes mágicos",
+            "&7en un área de &e5x5 &7usando fertilizantes.",
+            "",
+            "&e\u26A1 &7Consumo: &b32 J/s",
+            "&e\u26A1 &7Capacidad: &b128 J");
+        ItemStack[] growerT1Recipe = new ItemStack[] {
+            SlimefunItems.ELECTRIC_MOTOR.item(), new ItemStack(Material.BONE_BLOCK), SlimefunItems.ELECTRIC_MOTOR.item(),
+            SlimefunItems.DURALUMIN_INGOT.item(), SlimefunItems.FERTILIZER.item(), SlimefunItems.DURALUMIN_INGOT.item(),
+            SlimefunItems.ELECTRIC_MOTOR.item(), SlimefunItems.MEDIUM_CAPACITOR.item(), SlimefunItems.ELECTRIC_MOTOR.item()
+        };
+        MagicalGrower growerObjT1 = new MagicalGrower(machineryItemGroup, growerT1, RecipeType.ENHANCED_CRAFTING_TABLE, growerT1Recipe, MagicalGrower.Tier.ONE);
+        growerObjT1.register(this);
+
+        // Grower Tier 2
+        SlimefunItemStack growerT2 = new SlimefunItemStack("MAGICAL_AUTO_GROWER_2", Material.DROPPER,
+            "&6Fertilizador Mágico Automático &e(Tier II)", "",
+            "&7Acelera y hace crecer brotes mágicos",
+            "&7en un área ampliada de &e9x9 &7usando fertilizantes.",
+            "",
+            "&e\u26A1 &7Consumo: &b64 J/s",
+            "&e\u26A1 &7Capacidad: &b256 J");
+        ItemStack[] growerT2Recipe = new ItemStack[] {
+            SlimefunItems.ELECTRO_MAGNET.item(), SlimefunItems.FERROSILICON.item(), SlimefunItems.ELECTRO_MAGNET.item(),
+            SlimefunItems.HARDENED_METAL_INGOT.item(), growerT1.item(), SlimefunItems.HARDENED_METAL_INGOT.item(),
+            SlimefunItems.ELECTRO_MAGNET.item(), SlimefunItems.BIG_CAPACITOR.item(), SlimefunItems.ELECTRO_MAGNET.item()
+        };
+        MagicalGrower growerObjT2 = new MagicalGrower(machineryItemGroup, growerT2, RecipeType.ENHANCED_CRAFTING_TABLE, growerT2Recipe, MagicalGrower.Tier.TWO);
+        growerObjT2.register(this);
+
+        // Condenser
+        SlimefunItemStack condenser = new SlimefunItemStack("MAGICAL_ESSENCE_CONDENSER", Material.RESPAWN_ANCHOR,
+            "&6Condensador de Esencias Mágicas", "",
+            "&7Sintetiza automáticamente 8 esencias",
+            "&7mágicas en sus lingotes o recursos finales.",
+            "",
+            "&e\u26A1 &7Consumo: &b20 J/s",
+            "&e\u26A1 &7Capacidad: &b256 J");
+        ItemStack[] condenserRecipe = new ItemStack[] {
+            SlimefunItems.ELECTRIC_MOTOR.item(), SlimefunItems.REDSTONE_ALLOY.item(), SlimefunItems.ELECTRIC_MOTOR.item(),
+            SlimefunItems.REINFORCED_PLATE.item(), SlimefunItems.ENHANCED_AUTO_CRAFTER.item(), SlimefunItems.REINFORCED_PLATE.item(),
+            SlimefunItems.ELECTRIC_MOTOR.item(), SlimefunItems.MEDIUM_CAPACITOR.item(), SlimefunItems.ELECTRIC_MOTOR.item()
+        };
+        MagicalEssenceCondenser essenceCondenser = new MagicalEssenceCondenser(machineryItemGroup, condenser, RecipeType.ENHANCED_CRAFTING_TABLE, condenserRecipe);
+        essenceCondenser.register(this);
+        essenceCondenser.registerEssenceRecipes(magicalEssences);
+
+        // Researches with sensible experience levels
+        Research t1Research = new Research(new NamespacedKey(this, "magical_crops_t1"), 601, "Botánica Mágica (Tier I)", 15);
+        t1Research.addItems(magicalTier1Items.toArray(new SlimefunItem[0]));
+        t1Research.register();
+
+        Research t2Research = new Research(new NamespacedKey(this, "magical_crops_t2"), 602, "Botánica Mágica (Tier II)", 22);
+        t2Research.addItems(magicalTier2Items.toArray(new SlimefunItem[0]));
+        t2Research.register();
+
+        Research t3Research = new Research(new NamespacedKey(this, "magical_crops_t3"), 603, "Botánica Mágica (Tier III)", 30);
+        t3Research.addItems(magicalTier3Items.toArray(new SlimefunItem[0]));
+        t3Research.register();
+
+        Research t4Research = new Research(new NamespacedKey(this, "magical_crops_t4"), 604, "Botánica Mágica (Tier IV)", 40);
+        t4Research.addItems(magicalTier4Items.toArray(new SlimefunItem[0]));
+        t4Research.register();
+
+        Research mach1Research = new Research(new NamespacedKey(this, "magical_machinery_t1"), 605, "Maquinaria Agrícola Básica", 18);
+        mach1Research.addItems(harvesterObjT1, growerObjT1);
+        mach1Research.register();
+
+        Research mach2Research = new Research(new NamespacedKey(this, "magical_machinery_t2"), 606, "Automatización e Industria Mágica", 32);
+        mach2Research.addItems(harvesterObjT2, growerObjT2, essenceCondenser);
+        mach2Research.register();
         // @formatter:on
 
         items.put("WHEAT_SEEDS", new ItemStack(Material.WHEAT_SEEDS));
@@ -352,18 +547,78 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         String upperCase = name.toUpperCase(Locale.ROOT);
         String enumStyle = upperCase.replace(' ', '_');
 
-        SlimefunItemStack essence = new SlimefunItemStack(enumStyle + "_ESSENCE", Material.BLAZE_POWDER, "&rMagical Essence", "", "&7" + name);
+        // Base Essence (Tier 1)
+        SlimefunItemStack essence = new SlimefunItemStack(enumStyle + "_ESSENCE", Material.BLAZE_POWDER, "&rMagical Essence", "", "&7" + name, "", "&8\u21E8 &7Combine 8 in Enhanced Crafting Table");
 
-        Berry berry = new Berry(essence.item(), upperCase + "_ESSENCE", PlantType.ORE_PLANT, texture);
-        berries.add(berry);
+        // Tier 1 Plant (Drops 1x Essence)
+        SlimefunItemStack plantT1 = new SlimefunItemStack(enumStyle + "_PLANT", Material.OAK_SAPLING,
+            "&b" + name + " Plant &7(Tier I)", "", "&7Tier: &fI &7(Standard)", "&7Harvest Yield: &a1x Essence", "", "&8\u21E8 &7Can be planted on Dirt or Grass");
+        Berry berryT1 = new Berry(essence.item(), enumStyle + "_ESSENCE", PlantType.ORE_PLANT, texture);
+        berries.add(berryT1);
+        BonemealableItem bPlantT1 = new BonemealableItem(magicalItemGroup, plantT1, RecipeType.ENHANCED_CRAFTING_TABLE, recipe);
+        bPlantT1.register(this);
+        magicalTier1Items.add(bPlantT1);
 
-        new BonemealableItem(magicalItemGroup, new SlimefunItemStack(enumStyle + "_PLANT", Material.OAK_SAPLING, "&r" + name + " Plant"), RecipeType.ENHANCED_CRAFTING_TABLE, recipe)
-            .register(this);
+        // Tier 2 Plant (Drops 2x Essence)
+        SlimefunItemStack essenceT2 = new SlimefunItemStack(enumStyle + "_ESSENCE_2", Material.BLAZE_POWDER, "&eMagical Essence &6(Tier II)", "", "&7" + name, "&7Tier: &eII", "&7Drops &a2x Essence &7upon harvest");
+        SlimefunItemStack plantT2 = new SlimefunItemStack(enumStyle + "_PLANT_2", Material.OAK_SAPLING,
+            "&e" + name + " Plant &6(Tier II)", "", "&7Tier: &eII &6(Enhanced)", "&7Harvest Yield: &a2x Essence", "", "&8\u21E8 &7Can be planted on Dirt or Grass");
+        ItemStack[] t2Recipe = new ItemStack[] {
+            SlimefunItems.MAGIC_LUMP_1.item(), new ItemStack(Material.BONE_BLOCK), SlimefunItems.MAGIC_LUMP_1.item(),
+            new ItemStack(Material.BONE_BLOCK), plantT1.item(), new ItemStack(Material.BONE_BLOCK),
+            SlimefunItems.MAGIC_LUMP_1.item(), new ItemStack(Material.BONE_BLOCK), SlimefunItems.MAGIC_LUMP_1.item()
+        };
+        Berry berryT2 = new Berry(new CustomItemStack(essence.item(), 2), essenceT2.item(), enumStyle + "_ESSENCE_2", PlantType.ORE_PLANT, texture);
+        berries.add(berryT2);
+        BonemealableItem bPlantT2 = new BonemealableItem(magicalItemGroupT2, plantT2, RecipeType.ENHANCED_CRAFTING_TABLE, t2Recipe);
+        bPlantT2.register(this);
+        SlimefunItem sfEssenceT2 = new SlimefunItem(magicalItemGroupT2, essenceT2, ExoticGardenRecipeTypes.HARVEST_BUSH, new ItemStack[] { null, null, null, null, plantT2.item(), null, null, null, null });
+        sfEssenceT2.register(this);
+        magicalTier2Items.add(bPlantT2);
+        magicalTier2Items.add(sfEssenceT2);
 
+        // Tier 3 Plant (Drops 4x Essence)
+        SlimefunItemStack essenceT3 = new SlimefunItemStack(enumStyle + "_ESSENCE_3", Material.BLAZE_POWDER, "&dMagical Essence &5(Tier III)", "", "&7" + name, "&7Tier: &dIII", "&7Drops &a4x Essence &7upon harvest");
+        SlimefunItemStack plantT3 = new SlimefunItemStack(enumStyle + "_PLANT_3", Material.OAK_SAPLING,
+            "&d" + name + " Plant &5(Tier III)", "", "&7Tier: &dIII &5(Superior)", "&7Harvest Yield: &a4x Essence", "", "&8\u21E8 &7Can be planted on Dirt or Grass");
+        ItemStack[] t3Recipe = new ItemStack[] {
+            SlimefunItems.ENDER_LUMP_1.item(), SlimefunItems.REINFORCED_ALLOY_INGOT.item(), SlimefunItems.ENDER_LUMP_1.item(),
+            SlimefunItems.REINFORCED_ALLOY_INGOT.item(), plantT2.item(), SlimefunItems.REINFORCED_ALLOY_INGOT.item(),
+            SlimefunItems.ENDER_LUMP_1.item(), SlimefunItems.REINFORCED_ALLOY_INGOT.item(), SlimefunItems.ENDER_LUMP_1.item()
+        };
+        Berry berryT3 = new Berry(new CustomItemStack(essence.item(), 4), essenceT3.item(), enumStyle + "_ESSENCE_3", PlantType.ORE_PLANT, texture);
+        berries.add(berryT3);
+        BonemealableItem bPlantT3 = new BonemealableItem(magicalItemGroupT3, plantT3, RecipeType.ENHANCED_CRAFTING_TABLE, t3Recipe);
+        bPlantT3.register(this);
+        SlimefunItem sfEssenceT3 = new SlimefunItem(magicalItemGroupT3, essenceT3, ExoticGardenRecipeTypes.HARVEST_BUSH, new ItemStack[] { null, null, null, null, plantT3.item(), null, null, null, null });
+        sfEssenceT3.register(this);
+        magicalTier3Items.add(bPlantT3);
+        magicalTier3Items.add(sfEssenceT3);
+
+        // Tier 4 Plant (Drops 8x Essence)
+        SlimefunItemStack essenceT4 = new SlimefunItemStack(enumStyle + "_ESSENCE_4", Material.BLAZE_POWDER, "&6&lMagical Essence &c(Tier IV)", "", "&7" + name, "&7Tier: &cIV", "&7Drops &a8x Essence &7upon harvest");
+        SlimefunItemStack plantT4 = new SlimefunItemStack(enumStyle + "_PLANT_4", Material.OAK_SAPLING,
+            "&6&l" + name + " Plant &c(Tier IV)", "", "&7Tier: &cIV &6(Mythical)", "&7Harvest Yield: &a8x Essence &e(Instant Craft)", "", "&8\u21E8 &7Can be planted on Dirt or Grass");
+        ItemStack[] t4Recipe = new ItemStack[] {
+            SlimefunItems.CARBONADO.item(), SlimefunItems.SYNTHETIC_DIAMOND.item(), SlimefunItems.CARBONADO.item(),
+            SlimefunItems.SYNTHETIC_DIAMOND.item(), plantT3.item(), SlimefunItems.SYNTHETIC_DIAMOND.item(),
+            SlimefunItems.CARBONADO.item(), SlimefunItems.SYNTHETIC_DIAMOND.item(), SlimefunItems.CARBONADO.item()
+        };
+        Berry berryT4 = new Berry(new CustomItemStack(essence.item(), 8), essenceT4.item(), enumStyle + "_ESSENCE_4", PlantType.ORE_PLANT, texture);
+        berries.add(berryT4);
+        BonemealableItem bPlantT4 = new BonemealableItem(magicalItemGroupT4, plantT4, RecipeType.ENHANCED_CRAFTING_TABLE, t4Recipe);
+        bPlantT4.register(this);
+        SlimefunItem sfEssenceT4 = new SlimefunItem(magicalItemGroupT4, essenceT4, ExoticGardenRecipeTypes.HARVEST_BUSH, new ItemStack[] { null, null, null, null, plantT4.item(), null, null, null, null });
+        sfEssenceT4.register(this);
+        magicalTier4Items.add(bPlantT4);
+        magicalTier4Items.add(sfEssenceT4);
+
+        // Crafting Recipe: 8x Essence -> Raw Output Item
         MagicalEssence magicalEssence = new MagicalEssence(magicalItemGroup, essence);
-
         magicalEssence.setRecipeOutput(item.clone());
         magicalEssence.register(this);
+        magicalEssences.add(magicalEssence);
+        magicalTier1Items.add(magicalEssence);
     }
 
     @Nullable
